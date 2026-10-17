@@ -364,6 +364,13 @@ button, input, select, textarea, a {
     font-weight: 500;
 }
 
+#input_box:focus {
+    background: var(--bg-input);
+    border: 1px solid var(--border-focus);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 0 4px var(--primary-glow);
+}
+
 #input_box::placeholder {
     color: var(--text-muted);
 }
@@ -732,7 +739,7 @@ button, input, select, textarea, a {
     width: 22px;
     height: 22px;
     border-radius: 6px;
-    border: 2px solid var(--text-muted);
+    border: 2px solid #4A90E2;
     background: transparent;
     display: flex;
     align-items: center;
@@ -743,6 +750,7 @@ button, input, select, textarea, a {
     color: transparent;
     position: relative;
     touch-action: manipulation;
+    order: 2;
 }
 
 .custom-checkbox::before {
@@ -764,11 +772,13 @@ button, input, select, textarea, a {
 }
 
 .task-item.checked .custom-checkbox {
-    background: var(--success);
-    border-color: var(--success);
+    background: #4A90E2;
+    border-color: #4A90E2;
     color: #ffffff;
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
 }
+
+
+
 
 .task-content-wrap {
     display: flex;
