@@ -121,12 +121,18 @@ function getDeadlineInfo(dueDateStr, isCompleted) {
     const formattedTime = due.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
     const formattedDate = due.toLocaleDateString("id-ID", { day: "numeric", month: "short" });
 
+    const checkIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+    const alertIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+    const zapIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
+    const clockIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+    const calendarIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
+
     if (isCompleted) {
         return {
             state: "completed",
             badgeClass: "completed",
             text: `Deadline: ${formattedDate}, ${formattedTime}`,
-            icon: "✓"
+            iconSvg: checkIcon
         };
     }
 
@@ -151,7 +157,7 @@ function getDeadlineInfo(dueDateStr, isCompleted) {
             state: "overdue",
             badgeClass: "overdue",
             text: overdueText,
-            icon: "🚨",
+            iconSvg: alertIcon,
             isOverdue: true
         };
     } else if (diffHours <= 12) {
@@ -162,7 +168,7 @@ function getDeadlineInfo(dueDateStr, isCompleted) {
             state: "urgent",
             badgeClass: "urgent",
             text: `Mendesak! Sisa ${timeLeft} (${formattedTime})`,
-            icon: "⚡",
+            iconSvg: zapIcon,
             isUrgent: true
         };
     } else if (diffHours <= 24) {
@@ -171,14 +177,14 @@ function getDeadlineInfo(dueDateStr, isCompleted) {
             state: "today",
             badgeClass: "today",
             text: `Hari ini, ${formattedTime} (sisa ${hours} jam)`,
-            icon: "🕒"
+            iconSvg: clockIcon
         };
     } else if (diffDays <= 2) {
         return {
             state: "tomorrow",
             badgeClass: "tomorrow",
             text: `Besok, ${formattedTime}`,
-            icon: "📅"
+            iconSvg: calendarIcon
         };
     } else {
         const days = Math.ceil(diffDays);
@@ -186,7 +192,7 @@ function getDeadlineInfo(dueDateStr, isCompleted) {
             state: "upcoming",
             badgeClass: "upcoming",
             text: `${days} hari lagi (${formattedDate}, ${formattedTime})`,
-            icon: "📆"
+            iconSvg: calendarIcon
         };
     }
 }
@@ -208,7 +214,7 @@ function updateStats() {
         if (total === 0) {
             progressStatusText.textContent = "Belum ada tugas kuliah. Tambahkan tugas pertamamu!";
         } else if (completed === total) {
-            progressStatusText.textContent = "Luar biasa! Semua tugas telah terselesaikan 🎉";
+            progressStatusText.textContent = "Luar biasa! Semua tugas telah terselesaikan!";
         } else if (completed === 0) {
             progressStatusText.textContent = `0 dari ${total} tugas selesai. Ayo mulai selesaikan!`;
         } else {
@@ -224,7 +230,6 @@ function updateStats() {
         clearCompletedBtn.style.display = completed > 0 ? "inline-block" : "none";
     }
 
-    // Check deadlines for active tasks to show deadline alert banner
     if (deadlineBanner) {
         let overdueCount = 0;
         let urgentCount = 0;
@@ -241,14 +246,18 @@ function updateStats() {
             deadlineBanner.style.display = "flex";
             deadlineBanner.className = "deadline-banner banner-overdue";
             deadlineBanner.innerHTML = `
-                <span>🚨</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
                 <span><strong>Perhatian:</strong> Ada <strong>${overdueCount} tugas</strong> yang telah melewati batas deadline!</span>
             `;
         } else if (urgentCount > 0) {
             deadlineBanner.style.display = "flex";
             deadlineBanner.className = "deadline-banner banner-urgent";
             deadlineBanner.innerHTML = `
-                <span>⚡</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                </svg>
                 <span><strong>Mendesak:</strong> Ada <strong>${urgentCount} tugas</strong> yang memiliki deadline hari ini!</span>
             `;
         } else {
@@ -276,12 +285,9 @@ function renderTasks() {
         });
     }
 
-    // Sorting
     filteredTasks.sort((a, b) => {
         if (currentSort === "deadline") {
-            // Completed tasks at the end
             if (a.completed !== b.completed) return a.completed ? 1 : -1;
-            // Tasks with dueDate first
             if (!a.dueDate && b.dueDate) return 1;
             if (a.dueDate && !b.dueDate) return -1;
             if (a.dueDate && b.dueDate) {
@@ -289,7 +295,6 @@ function renderTasks() {
             }
             return (b.id || 0) - (a.id || 0);
         } else {
-            // Default: newest first
             return (b.id || 0) - (a.id || 0);
         }
     });
@@ -329,6 +334,8 @@ function renderTasks() {
 
         const isEditing = editingTaskId === task.id;
 
+        const capIcon = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`;
+
         li.innerHTML = `
             <div class="task-left-section">
                 <button type="button" class="custom-checkbox" aria-label="${task.completed ? "Tandai belum selesai" : "Tandai selesai"}" data-action="toggle">
@@ -346,14 +353,16 @@ function renderTasks() {
                         ${
                             course
                                 ? `<span class="badge badge-course">
-                                    🎓 ${escapeHtml(course)}
+                                    ${capIcon}
+                                    <span>${escapeHtml(course)}</span>
                                    </span>`
                                 : ""
                         }
                         ${
                             deadlineInfo
                                 ? `<span class="badge badge-deadline ${deadlineInfo.badgeClass}">
-                                    ${deadlineInfo.icon} ${escapeHtml(deadlineInfo.text)}
+                                    ${deadlineInfo.iconSvg}
+                                    <span>${escapeHtml(deadlineInfo.text)}</span>
                                    </span>`
                                 : ""
                         }
@@ -452,11 +461,11 @@ list.addEventListener("click", function (e) {
         saveAndRender();
 
         if (!wasCompleted) {
-            showToast("Tugas selesai! Kerja bagus 👏", "success");
+            showToast("Tugas selesai! Kerja bagus", "success");
             const allDone = tasks.length > 0 && tasks.every(t => t.completed);
             if (allDone) {
                 triggerConfetti();
-                showToast("🎉 Hebat! Semua tugas telah terselesaikan!", "success", 4000);
+                showToast("Hebat! Semua tugas telah terselesaikan!", "success", 4000);
             }
         }
     } else if (action === "edit") {
@@ -625,10 +634,8 @@ window.addEventListener("resize", () => {
     }
 });
 
-// Periodic update every 60 seconds so deadline countdowns stay fresh
 setInterval(() => {
     updateStats();
-    // re-render if active tasks have deadlines to update relative countdown text
     const hasActiveDeadlines = tasks.some(t => !t.completed && t.dueDate);
     if (hasActiveDeadlines) {
         renderTasks();

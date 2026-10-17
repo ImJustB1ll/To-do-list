@@ -2,7 +2,7 @@
 <html lang="id" data-theme="dark">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
         <title>To Do List</title>
         <meta name="description" content="Aplikasi to-do list modern, elegan, dan intuitif untuk mengatur tugas harian, prioritas, kategori, dan deadline secara produktif." />
 
@@ -136,10 +136,8 @@
                         </div>
                     </form>
 
-                    <!-- Deadline Notice Banner (appears when tasks are overdue/urgent) -->
                     <div id="deadline-banner" class="deadline-banner" style="display: none;" role="alert"></div>
 
-                    <!-- Filter & Search Toolbar -->
                     <div class="toolbar">
                         <div class="search-box-wrap">
                             <span class="search-icon" aria-hidden="true">
@@ -148,7 +146,7 @@
                                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                                 </svg>
                             </span>
-                            <input type="text" id="search_input" placeholder="Cari tugas atau mata kuliah..." aria-label="Cari tugas atau mata kuliah" />
+                            <input type="text" id="search_input" placeholder="Cari" aria-label="Cari" />
                         </div>
 
                         <div class="toolbar-controls">
@@ -156,7 +154,7 @@
                                 <label for="sort_select" class="sort-label">Urutkan:</label>
                                 <select id="sort_select" class="select-sort" aria-label="Urutkan Tugas">
                                     <option value="created">Terbaru</option>
-                                    <option value="deadline">⏳ Deadline Terdekat</option>
+                                    <option value="deadline">Deadline Terdekat</option>
                                 </select>
                             </div>
 

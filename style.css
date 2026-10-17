@@ -77,6 +77,8 @@
 html {
     font-size: 16px;
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
 }
 
 body {
@@ -89,7 +91,14 @@ body {
     position: relative;
     overflow-x: hidden;
     line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button, input, select, textarea, a {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .ambient-glow {
@@ -450,7 +459,6 @@ body {
     color: #fde047;
 }
 
-/* Button with Left-to-Right Fill Effect on Hover */
 .btn-submit {
     position: relative;
     overflow: hidden;
@@ -733,11 +741,26 @@ body {
     flex-shrink: 0;
     transition: var(--transition);
     color: transparent;
+    position: relative;
+    touch-action: manipulation;
+}
+
+.custom-checkbox::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
 }
 
 .custom-checkbox:hover {
     border-color: var(--primary);
     transform: scale(1.05);
+}
+
+.custom-checkbox:active {
+    transform: scale(0.92);
 }
 
 .task-item.checked .custom-checkbox {
@@ -1076,51 +1099,124 @@ footer {
     z-index: 9998;
 }
 
+.btn-submit:active,
+.btn-icon:active,
+.tab-btn:active,
+.btn-task-action:active {
+    transform: scale(0.96);
+}
+
 @media (max-width: 640px) {
     .app-wrapper {
-        padding: 1.25rem 0.85rem;
+        padding: max(1.25rem, env(safe-area-inset-top)) max(0.85rem, env(safe-area-inset-right)) max(1.5rem, env(safe-area-inset-bottom)) max(0.85rem, env(safe-area-inset-left));
+        gap: 1.15rem;
+    }
+
+    .brand-section {
+        gap: 0.75rem;
+    }
+
+    .brand-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .brand-title-wrap h1 {
+        font-size: 1.45rem;
+    }
+
+    .brand-subtitle {
+        font-size: 0.78rem;
+    }
+
+    .progress-card {
+        padding: 1rem 1.15rem;
+    }
+
+    .progress-title-group h2 {
+        font-size: 0.98rem;
     }
 
     .todo_app {
-        padding: 1.25rem;
+        padding: 1.15rem 0.95rem;
+        gap: 1.25rem;
+    }
+
+    .form-header-title {
+        font-size: 1.05rem;
+    }
+
+    .todo-form-container {
+        padding: 0.85rem;
+        gap: 0.75rem;
+    }
+
+    #input_box,
+    .input-custom,
+    .date-custom,
+    .search-box-wrap input,
+    .select-sort,
+    .task-edit-input {
+        font-size: 16px;
+    }
+
+    .input-main-row {
+        min-height: 42px;
     }
 
     .form-options-row {
         flex-direction: column;
         align-items: stretch;
+        gap: 0.65rem;
     }
 
     .option-group {
         flex-direction: column;
         align-items: stretch;
         width: 100%;
+        gap: 0.65rem;
     }
 
     .input-sub-wrap {
         width: 100%;
+        min-height: 44px;
+        padding: 0.45rem 0.75rem;
     }
 
     .input-custom {
         width: 100%;
+        min-width: 0;
     }
 
     .date-custom {
         width: 100%;
+        -webkit-appearance: none;
+        appearance: none;
     }
 
     .btn-submit {
         justify-content: center;
         width: 100%;
+        min-height: 46px;
+        font-size: 0.95rem;
+    }
+
+    .search-box-wrap {
+        min-height: 44px;
+        padding: 0.45rem 0.75rem;
     }
 
     .toolbar-controls {
         flex-direction: column;
         align-items: stretch;
         width: 100%;
+        gap: 0.65rem;
     }
 
     .sort-wrap {
         justify-content: space-between;
+        min-height: 42px;
+        padding: 0.4rem 0.75rem;
     }
 
     .filter-tabs {
@@ -1131,6 +1227,66 @@ footer {
     .tab-btn {
         flex: 1;
         justify-content: center;
-        padding: 0.4rem 0.5rem;
+        min-height: 42px;
+        padding: 0.45rem 0.5rem;
+        font-size: 0.825rem;
+    }
+
+    .task-item {
+        padding: 0.85rem 0.8rem;
+        gap: 0.65rem;
+    }
+
+    .task-left-section {
+        gap: 0.65rem;
+    }
+
+    .task-title {
+        font-size: 0.92rem;
+    }
+
+    .task-actions {
+        gap: 0.25rem;
+    }
+
+    .btn-task-action {
+        width: 36px;
+        height: 36px;
+    }
+
+    .toast-container {
+        left: 1rem;
+        right: 1rem;
+        bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+
+    .toast {
+        width: 100%;
+    }
+}
+
+@media (max-width: 380px) {
+    .brand-title-wrap h1 {
+        font-size: 1.3rem;
+    }
+
+    .tab-btn {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.25rem;
+        gap: 0.2rem;
+    }
+
+    .tab-count {
+        font-size: 0.68rem;
+        padding: 0.05rem 0.3rem;
+    }
+
+    .task-meta-row {
+        gap: 0.3rem;
+    }
+
+    .badge {
+        font-size: 0.68rem;
+        padding: 0.12rem 0.45rem;
     }
 }
